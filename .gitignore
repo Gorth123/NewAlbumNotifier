@@ -167,4 +167,5 @@ obj
 bin
 Debug
 Release
+*.suo
 
