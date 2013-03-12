@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using RestSharp;
-using SQLite;
 
 namespace NewAlbumNotifer
 {
@@ -29,9 +28,6 @@ namespace NewAlbumNotifer
         {
             InitializeComponent();
 
-            var db = new SQLite.SQLiteConnection("C:\\temp\\test.db");
-            db.CreateTable<ArtistAmbiguation>();
-            db.CreateTable<Artist>();
         }
 
         private void Window_Initialized_1(object sender, EventArgs e)
