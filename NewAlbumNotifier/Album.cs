@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewAlbumNotifer
+namespace NewAlbumNotifier
 {
     class Album : IEqualityComparer<Album>
     {
@@ -12,6 +12,9 @@ namespace NewAlbumNotifer
         public string Id { get; set; }
         public string Date { get; set; }
         public string Type { get; set; }
+        public bool Ignore { get; set; }
+        public bool Have { get; set; }
+        public string FolderPath { get; set; }
 
         public override string ToString()
         {

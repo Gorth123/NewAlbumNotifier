@@ -1,13 +1,19 @@
-﻿<Window x:Class="NewAlbumNotifer.MainWindow"
+﻿<Window x:Class="NewAlbumNotifier.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="400.057" Width="525" Initialized="Window_Initialized_1">
-    <Grid>
-        <ListBox x:Name="lbArtist" HorizontalAlignment="Left" Height="100" Margin="10,58,0,0" VerticalAlignment="Top" Width="194" SelectionChanged="lbArtist_SelectionChanged"/>
-        <ListBox x:Name="lbAlbum" HorizontalAlignment="Left" Height="100" Margin="240,58,0,0" VerticalAlignment="Top" Width="252" RenderTransformOrigin="0.366,-0.234" SelectionChanged="lbAlbum_SelectionChanged"/>
-        <ListBox x:Name="lbArtistDetails" HorizontalAlignment="Left" Height="185" Margin="10,174,0,0" VerticalAlignment="Top" Width="194"/>
-        <ListBox x:Name="lbAlbumDetails" HorizontalAlignment="Left" Height="185" Margin="240,174,0,0" VerticalAlignment="Top" Width="252"/>
-        <TextBox x:Name="txtArtist" HorizontalAlignment="Left" Height="23" Margin="10,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="302" ToolTip="Artist name to search for" KeyDown="txtArtist_KeyDown"/>
-
+        Title="MainWindow" Height="540.957" Width="808.072">
+    <Grid Margin="0,0,-79.4,0.2">
+        <ComboBox x:Name="cmbArtistListFilter" HorizontalAlignment="Left" Margin="31,76,0,0" VerticalAlignment="Top" Width="141" SelectionChanged="cmbArtistListFilter_SelectionChanged">
+            <ComboBoxItem Content="Artists"/>
+            <ComboBoxItem Content="Ambiguous Artists"/>
+            <ComboBoxItem Content="Missing Artists"/>
+        </ComboBox>
+        <ListBox x:Name="lbArtistList" HorizontalAlignment="Left" Height="259" Margin="31,121,0,0" VerticalAlignment="Top" Width="141" SelectionChanged="lbArtistList_SelectionChanged"/>
+        <ListBox x:Name="lbAlbums" HorizontalAlignment="Left" Height="259" Margin="241,121,0,0" VerticalAlignment="Top" Width="158"/>
+        <ListBox x:Name="lbMissingAlbums" HorizontalAlignment="Left" Height="259" Margin="432,121,0,0" VerticalAlignment="Top" Width="158"/>
+        <ListBox x:Name="lbExtraAlbums" HorizontalAlignment="Left" Height="259" Margin="620,121,0,0" VerticalAlignment="Top" Width="158"/>
+        <TextBlock HorizontalAlignment="Left" Margin="241,94,0,0" TextWrapping="Wrap" Text="Albums" VerticalAlignment="Top" Height="22" Width="158"/>
+        <TextBlock HorizontalAlignment="Left" Margin="432,94,0,0" TextWrapping="Wrap" Text="Missing Albums" VerticalAlignment="Top" Height="22" Width="158"/>
+        <TextBlock HorizontalAlignment="Left" Margin="620,94,0,0" TextWrapping="Wrap" Text="Extra Albums" VerticalAlignment="Top" Height="22" Width="158"/>
     </Grid>
 </Window>

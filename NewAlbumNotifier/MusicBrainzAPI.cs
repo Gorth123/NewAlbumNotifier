@@ -7,7 +7,7 @@ using RestSharp;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace NewAlbumNotifer
+namespace NewAlbumNotifier
 {
     class MusicBrainzAPI
     {
