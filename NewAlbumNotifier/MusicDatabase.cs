@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace NewAlbumNotifier
 {
-    class MusicDatabase
+    class MusicDatabase : INotifyPropertyChanged
     {
-        public List<Artist> Artists { get; set; }
-        public List<Artist> AmbiguousArtists { get; set; }
-        public List<string> MissingArtists { get; set; }
+        public ObservableCollection<Artist> Artists { get; set; }
+        public ObservableCollection<AmbiguousArtistGroup> AmbiguousArtists { get; set; }
 
         public MusicDatabase()
         {
-            Artists = new List<Artist>();
-            AmbiguousArtists = new List<Artist>();
-            MissingArtists = new List<string>();
+            PropertyChanged = delegate { };
+
+            Artists = new ObservableCollection<Artist>();
+            AmbiguousArtists = new ObservableCollection<AmbiguousArtistGroup>();
         }
 
         public static MusicDatabase Load()
@@ -28,7 +31,7 @@ namespace NewAlbumNotifier
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                serializer.NullValueHandling = NullValueHandling.Include;
+                serializer.NullValueHandling = NullValueHandling.Ignore;
                 serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
 
                 using (StreamReader sr = new StreamReader("C:\\temp\\temp.txt"))
@@ -50,7 +53,7 @@ namespace NewAlbumNotifier
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Include;
+            serializer.NullValueHandling = NullValueHandling.Ignore;
 
             using (StreamWriter sw = new StreamWriter("C:\\temp\\temp.txt"))
             using (JsonWriter writer = new JsonTextWriter(sw))
@@ -60,5 +63,12 @@ namespace NewAlbumNotifier
 
             return true;
         }
+
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
     }
 }

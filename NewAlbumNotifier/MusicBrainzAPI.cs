@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RestSharp;
 using System.Xml;
 using System.Xml.Linq;
+using System.Collections.ObjectModel;
 
 namespace NewAlbumNotifier
 {
@@ -105,11 +106,101 @@ namespace NewAlbumNotifier
                           where (a.Type == "Album" || a.Type == "Ep")
                           orderby a.Name ascending, a.Date ascending
                           select a).Distinct(comparer).ToList<Album>();
-                //all_albums.Distinct(comparer).ToList<Album>();
                 return all_albums;
             }
 
             return null;
+        }
+
+        public void Scan(string path, MusicDatabase db)
+        {
+            foreach (Artist a in db.Artists)
+            {
+                if (a.ExtraAlbums != null)
+                    a.ExtraAlbums.Clear();
+            }
+
+            foreach (string s in System.IO.Directory.EnumerateDirectories(path))
+            {
+                System.Console.WriteLine(s);
+                if (db.Artists.FirstOrDefault(a => string.Compare(a.FolderPath, s) == 0) == null)
+                {
+                    // new artist detected
+                    string name = System.IO.Path.GetFileNameWithoutExtension(s);
+                    if (db.AmbiguousArtists.FirstOrDefault(a => string.Compare(a.Name, name) == 0) == null)
+                    {
+                        // not already ambiguated, so try to find online
+                        List<Artist> artists = SearchForArtist(name);
+                        if (artists.Count > 0)
+                        {
+                            if (artists.Count == 1)
+                            {
+                                artists[0].FolderPath = s;
+
+                                db.Artists.Add(artists[0]);
+                            }
+                            else
+                            {
+                                AmbiguousArtistGroup group = new AmbiguousArtistGroup { Name = name, FolderPath = s, Artists = new ObservableCollection<Artist>() };
+                                foreach (Artist a in artists)
+                                    group.Artists.Add(a);
+                                db.AmbiguousArtists.Add(group);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (Artist artist in db.Artists)
+            {
+                var query = (from f in System.IO.Directory.EnumerateDirectories(artist.FolderPath)
+                            let tokens = System.IO.Path.GetFileNameWithoutExtension(f).Split('-')
+                            where tokens.Length == 2
+                            let result = tokens[1].Trim()
+                            select new { folder = f, name = result }).ToList();
+
+                // first look online for any new albums
+                List<Album> albums = GetAlbumsForArtist(artist.Id);
+                foreach (Album album in albums)
+                {
+                    if (artist.HasAlbum(album.Name) == false)
+                    {
+
+                        var album_name = query.Find(s =>
+                        {
+                            return string.Compare(s.name, album.Name, true) == 0;
+                        });
+
+                        if (album_name != null)
+                        {
+                            album.FolderPath = album_name.folder;
+                            album.Name = album_name.name;
+                            artist.AddAlbum(album);
+                        }
+                        else
+                        {
+                            if (artist.HasMissingAlbum(album.Name) == false)
+                            {
+                                artist.AddMissingAlbum(album);
+                            }
+                        }
+                    }
+                }
+
+                // then look in the folder for any albums that don't exist online
+                foreach (var v in query)
+                {
+                    if (artist.HasAlbum(v.name) == false)
+                    {
+                        if (artist.HasExtraAlbum(v.name) == false)
+                        {
+                            artist.AddExtraAlbum(new Album() { Name = v.name, FolderPath = v.folder });
+                        }
+                    }
+                }
+            }
+
+            db.Save();
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿<Window x:Class="NewAlbumNotifier.MissingAlbumReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MissingAlbumReportWindow" Height="228.8" Width="300" Loaded="Window_Loaded_1">
+    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Window}, Path=Width}">
+        <TreeView x:Name="treeReport" Height="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Window}, Path=Height}" Width="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Window}, Path=Width}"/>
+        <Button x:Name="btnExport" Content="Export" />    
+    </StackPanel>
+</Window>

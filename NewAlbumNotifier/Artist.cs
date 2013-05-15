@@ -18,6 +18,13 @@ namespace NewAlbumNotifier
         public List<Album> MissingAlbums { get; set; }
         public List<Album> ExtraAlbums { get; set; }
 
+        public Artist()
+        {
+            //Albums = new List<Album>();
+            //MissingAlbums = new List<Album>();
+            //ExtraAlbums = new List<Album>();
+
+        }
         public bool HasAlbum(string name)
         {
             return HasAlbumEntry(name, Albums);
